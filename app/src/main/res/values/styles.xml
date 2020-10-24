@@ -1,0 +1,25 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:background">@android:color/white</item>
+        <item name="background">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="android:editTextColor">#f00</item>
+        <item name="android:textColor">#f00</item>
+        <item name="android:textColorHint">@color/grey</item>
+        <item name="editTextBackground">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:queryBackground" tools:targetApi="lollipop">@android:color/transparent
+        </item>
+        <item name="iconTint">@color/darkGrey</item>
+        <item name="android:background">@drawable/search_background</item>
+    </style>
+
+
+</resources>

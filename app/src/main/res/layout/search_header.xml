@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/horizontal_margin"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/search_page_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/vertical_margin"
+        android:fontFamily="@font/quicksand_semibold"
+        android:text="@string/explore"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/headings"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:focusedByDefault="true"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search Here"
+        android:theme="@style/AppTheme.SearchView"
+        app:iconifiedByDefault="false"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_page_heading"
+        app:queryBackground="@android:color/transparent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
