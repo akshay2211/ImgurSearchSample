@@ -5,19 +5,19 @@ package com.interview.project.ui.utils
  * akshay2211@github.io
  */
 
-enum class State1 {
+enum class State {
     RUNNING,
     SUCCESS,
     FAILED
 }
 
 data class NetworkState private constructor(
-    val State: State1,
+    val State: State,
     val msg: String? = null
 ) {
     companion object {
-        val LOADED = NetworkState(State1.SUCCESS)
-        val LOADING = NetworkState(State1.RUNNING)
-        fun error(msg: String?) = NetworkState(State1.FAILED, msg)
+        val LOADED = NetworkState(State.SUCCESS)
+        val LOADING = NetworkState(State.RUNNING)
+        fun error(msg: String?) = NetworkState(State.FAILED, msg)
     }
 }

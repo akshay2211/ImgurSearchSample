@@ -1,6 +1,6 @@
 package com.interview.project.data.local
 
-import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import androidx.room.*
 import com.interview.project.model.Images
 
@@ -20,16 +20,16 @@ interface ImagesDao {
 
 
     @Query("SELECT * FROM images_table WHERE search_content = :search_content ORDER BY indexInResponse ASC")
-    fun postsBySearchContents(search_content: String): LiveData<List<Images>>
+    fun postsBySearchContents(search_content: String): DataSource.Factory<Int, Images>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(images: List<Images>)
 
-    @Query("SELECT MAX(indexInResponse) + 1 FROM images_table WHERE search_content = :search_content")
+    @Query("SELECT MAX(indexInResponse) FROM images_table WHERE search_content = :search_content")
     fun getNextIndexInSearch(search_content: String): Int
 
 
-    @Query("SELECT MAX(pageNumber) + 1 FROM images_table WHERE search_content = :search_content")
+    @Query("SELECT MAX(pageNumber) FROM images_table WHERE search_content = :search_content")
     fun getNextPageInSearch(search_content: String): Int
 
     @Query("DELETE FROM images_table WHERE search_content = :search_content")
@@ -37,4 +37,7 @@ interface ImagesDao {
 
     @Query("DELETE FROM images_table")
     suspend fun deleteTable()
+
+    @Query("SELECT COUNT(id) FROM images_table WHERE search_content = :search_content")
+    fun getCount(search_content: String): Int
 }

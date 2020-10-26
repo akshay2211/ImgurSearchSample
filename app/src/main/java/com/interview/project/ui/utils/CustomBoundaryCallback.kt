@@ -1,8 +1,10 @@
 package com.interview.project.ui.utils
 
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.paging.PagedList
 import androidx.paging.PagingRequestHelper
+import com.google.gson.Gson
 import com.interview.project.data.remote.ApiList
 import com.interview.project.model.BaseData
 import com.interview.project.model.Images
@@ -31,16 +33,34 @@ class CustomBoundaryCallback(
 
     @MainThread
     override fun onZeroItemsLoaded() {
+        Log.e("onZeroItemsLoaded", "onZeroItemsLoaded")
         helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
+            var response: Response<BaseData>? = null
             CoroutineScope(this.coroutineContext).launch {
-                var response = apiList.getSearchList("1", searchedContent)
-                if (!response.isSuccessful) {
-                    var error = response.errorBody()
-                    it.recordFailure(IllegalStateException(error?.extractMessage()))
-                    return@launch
-                }
-                insertItemsIntoDb(response, it)
+                try {
+                    response = apiList.getSearchList("1", searchedContent)
+                    Log.e("response api", "onZeroItemsLoaded ->${response?.code()}")
+                    Log.e(
+                        "response api",
+                        "onZeroItemsLoaded ->${Gson().toJson(response?.body())} ${
+                            Gson().toJson(response?.errorBody())
+                        }"
+                    )
 
+                    if (response?.isSuccessful != true) {
+                        var error = response?.errorBody()
+                        it.recordFailure(IllegalStateException(error?.extractMessage()))
+                        return@launch
+                    }
+                    insertItemsIntoDb(response!!, it)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    it.recordFailure(IllegalStateException("error"))
+                    Log.e(
+                        "response api",
+                        "onZeroItemsLoaded Exception ->${response?.message()}   ${response?.code()}"
+                    )
+                }
             }
         }
     }
@@ -48,17 +68,37 @@ class CustomBoundaryCallback(
 
     @MainThread
     override fun onItemAtEndLoaded(itemAtEnd: Images) {
+        Log.e("onItemAtEndLoaded", "onItemAtEndLoaded ${itemAtEnd.pageNumber + 1}")
         helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
+            Log.e("onItemAtEndLoaded", "actual call onItemAtEndLoaded ${itemAtEnd.pageNumber + 1}")
+            var response: Response<BaseData>? = null
             CoroutineScope(this.coroutineContext).launch {
-                var response =
-                    apiList.getSearchList(itemAtEnd.pageNumber.toString(), searchedContent)
-                if (!response.isSuccessful) {
-                    var error = response.errorBody()
-                    it.recordFailure(IllegalStateException(error?.extractMessage()))
-                    return@launch
+                try {
+                    response =
+                        apiList.getSearchList(
+                            (itemAtEnd.pageNumber + 1).toString(),
+                            searchedContent
+                        )
+                    Log.e("response api", "onItemAtEndLoaded ->${response?.code()}")
+                    Log.e(
+                        "response api",
+                        "onItemAtEndLoaded ->${Gson().toJson(response?.body())} ${
+                            Gson().toJson(response?.errorBody())
+                        }"
+                    )
+                    if (response?.body() == null) {
+                        var error = response?.errorBody()
+                        it.recordFailure(IllegalStateException(error?.extractMessage()))
+                        return@launch
+                    }
+                    insertItemsIntoDb(response!!, it)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    it.recordFailure(IllegalStateException("error"))
+                    Log.e("response api", "onItemAtEndLoaded Exception ->${response?.code()}")
                 }
-                insertItemsIntoDb(response, it)
             }
+
         }
     }
 

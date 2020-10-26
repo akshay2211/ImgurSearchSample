@@ -6,11 +6,14 @@ import com.interview.project.BuildConfig
 import com.interview.project.data.local.AppDatabase
 import com.interview.project.data.remote.ApiList
 import kotlinx.coroutines.Dispatchers
+import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 import kotlin.coroutines.CoroutineContext
+
 
 /**
  * Created by akshay on 24,October,2020
@@ -31,12 +34,14 @@ fun getLogInterceptor(): HttpLoggingInterceptor {
 }
 
 fun returnRetrofit(interceptor: HttpLoggingInterceptor): Retrofit {
+    val client = OkHttpClient.Builder()
+        .connectionSpecs(Arrays.asList(ConnectionSpec.COMPATIBLE_TLS))
+        .addInterceptor(interceptor)
+        .build()
+
     return Retrofit.Builder().baseUrl(ApiList.BASE_PATH)
         .addConverterFactory(GsonConverterFactory.create())
-        .client(
-            OkHttpClient.Builder().addInterceptor(interceptor)
-                .build()
-        ).build()
+        .client(client).build()
 }
 
 fun getApi(retrofit: Retrofit): ApiList {

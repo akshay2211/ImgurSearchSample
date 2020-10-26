@@ -2,26 +2,93 @@ package com.interview.project
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.interview.project.ui.adapters.ImagesListAdapter
 import com.interview.project.ui.main.MainActivityViewHolder
+import com.interview.project.ui.utils.GlideApp
+import com.interview.project.ui.utils.debounce
 import com.interview.project.ui.utils.setUpStatusNavigationBarColors
 import kotlinx.android.synthetic.main.activity_main.*
-import org.koin.android.ext.android.inject
+import kotlinx.android.synthetic.main.search_header.*
+import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
 class MainActivity : AppCompatActivity() {
-    private val liveViewModel by inject<MainActivityViewHolder>()
+    val liveViewModel: MainActivityViewHolder by stateViewModel()
+    var ctx = this
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setUpStatusNavigationBarColors()
         setContentView(R.layout.activity_main)
-        setup()
+        initAdapter()
+
+        // initSwipeToRefresh()
+        initSearch()
     }
 
-    private fun setup() {
-        recyclerView.apply { adapter = ImagesListAdapter() }
-        liveViewModel.imagesList.observe(this, Observer {
-            (recyclerView.adapter as ImagesListAdapter).submitList(it)
+    private fun initAdapter() {
+        val glide = GlideApp.with(this)
+        val adapter = ImagesListAdapter(glide) {
+            liveViewModel.retry()
+        }
+        var manager = GridLayoutManager(
+            this, 4,
+            GridLayoutManager.VERTICAL, false
+        ).apply {
+            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (adapter.getItemViewType(position)) {
+                        R.layout.images_row -> 1
+                        R.layout.network_state_item -> 4
+                        else -> 1
+                    }
+                }
+            }
+        }
+        recyclerView.layoutManager = manager
+        recyclerView.adapter = adapter
+        liveViewModel.posts.observe(this, {
+            adapter.submitList(it) {
+                // Workaround for an issue where RecyclerView incorrectly uses the loading / spinner
+                // item added to the end of the list as an anchor during initial load.
+                val layoutManager = manager
+                val position = layoutManager.findFirstCompletelyVisibleItemPosition()
+                if (position != RecyclerView.NO_POSITION) {
+                    recyclerView.scrollToPosition(position)
+                }
+            }
         })
+        liveViewModel.networkState.observe(this, {
+            adapter.setNetworkState(it)
+        })
+    }
+
+    private fun initSearch() {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText.debounce { string ->
+                    updatedSubredditFromInput()
+                }
+                return false
+            }
+        })
+        searchView.setQuery("vanilla", true)
+    }
+
+    private fun updatedSubredditFromInput() {
+        searchView.query.trim().toString().let {
+            if (it.isNotEmpty()) {
+                if (liveViewModel.showSearchedContent(it)) {
+                    recyclerView.scrollToPosition(0)
+                    (recyclerView.adapter as? ImagesListAdapter)?.submitList(null)
+                }
+            }
+        }
     }
 }
