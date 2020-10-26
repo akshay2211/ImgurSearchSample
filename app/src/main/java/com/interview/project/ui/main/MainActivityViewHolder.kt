@@ -1,56 +1,53 @@
 package com.interview.project.ui.main
 
-import android.content.Context
-import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.paging.DataSource
-import androidx.paging.LivePagedListBuilder
-import androidx.paging.PagedList.BoundaryCallback
-import com.interview.project.data.local.AppDatabase
-import com.interview.project.data.remote.ApiList
-import com.interview.project.model.Images
-import kotlinx.coroutines.launch
+import androidx.lifecycle.map
+import androidx.lifecycle.switchMap
+import com.interview.project.data.repository.ImgurPostsRepository
 
 /**
  * Created by akshay on 24,October,2020
  * akshay2211@github.io
  */
-class MainActivityViewHolder(private var context: Context, appdb: AppDatabase, apiList: ApiList) :
+class MainActivityViewHolder(
+    val handle: SavedStateHandle,
+    private val repository: ImgurPostsRepository
+) :
     ViewModel() {
-    private val myImagesDataSource: DataSource.Factory<Int, Images> =
-        appdb.imagesDao().imagesByDate()
+    companion object {
+        const val KEY_IMGUR = "imgur_search_key"
+        const val DEFAULT_IMGUR_SEARCH = "vanilla"
+    }
 
-    val imagesList = LivePagedListBuilder(myImagesDataSource, 5)
-        .setBoundaryCallback(object :
-            BoundaryCallback<Images>() {
-            override fun onItemAtEndLoaded(itemAtEnd: Images) {
-                super.onItemAtEndLoaded(itemAtEnd)
-                Log.e("onItemAtEndLoaded", "-> ${itemAtEnd.id}  ${itemAtEnd.title}")
-            }
+    init {
+        if (!handle.contains(KEY_IMGUR)) {
+            handle.set(KEY_IMGUR, DEFAULT_IMGUR_SEARCH)
+        }
+    }
 
-            override fun onItemAtFrontLoaded(itemAtFront: Images) {
-                super.onItemAtFrontLoaded(itemAtFront)
-                Log.e("onItemAtFrontLoaded", "-> ${itemAtFront.id}  ${itemAtFront.title}")
-            }
+    private val repoResult = handle.getLiveData<String>(KEY_IMGUR).map {
+        repository.getImgurPosts(it, 30)
+    }
+    val posts = repoResult.switchMap { it.pagedList }
+    val networkState = repoResult.switchMap { it.networkState }
+    val refreshState = repoResult.switchMap { it.refreshState }
 
-            override fun onZeroItemsLoaded() {
-                super.onZeroItemsLoaded()
-                Log.e("onZeroItemsLoaded", "-> onZeroItemsLoaded")
-                viewModelScope.launch {
-                    var list = apiList.getSearchList("1", "vanilla")
-                        .body()?.data
-                    Log.e("check list count ", "${list?.size}")
+    fun refresh() {
+        repoResult.value?.refresh?.invoke()
+    }
 
-                    list?.forEachIndexed { index, data ->
-                        if (!data.images.isNullOrEmpty()) {
-                            Log.e("check images ", "${data.images!![0].title}")
-                            appdb.imagesDao().insert(data.images!!)
-                        }
-                    }
+    fun showSearchedContent(search_content: String): Boolean {
+        if (handle.get<String>(KEY_IMGUR) == search_content) {
+            return false
+        }
+        handle.set(KEY_IMGUR, search_content)
+        return true
+    }
 
-                }
-            }
+    fun retry() {
+        val listing = repoResult.value
+        listing?.retry?.invoke()
+    }
 
-        }).build()
 }
