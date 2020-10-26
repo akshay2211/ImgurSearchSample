@@ -1,6 +1,8 @@
 package com.interview.project.model
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
@@ -11,21 +13,27 @@ import java.io.Serializable
  * akshay2211@github.io
  */
 
-@Entity(tableName = "images_table")
+@Entity(tableName = "images_table", indices = [Index(value = ["search_content"], unique = false)])
 data class Images(
     @SerializedName("title") var title: String?,
     @SerializedName("description") var description: String?,
     @SerializedName("datetime") var datetime: Int?,
-    @SerializedName("type") var type: String?,
+    @SerializedName("type") var type: String = "",
     @SerializedName("animated") var animated: Boolean = false,
     @SerializedName("width") var width: Int = 0,
     @SerializedName("height") var height: Int = 0,
     @SerializedName("size") var size: Int = 0,
-    @SerializedName("link") val link: String
-) : Serializable {
+    @SerializedName("link") val link: String = "",
+    @SerializedName("search_content")
+    @ColumnInfo(collate = ColumnInfo.NOCASE)
+    var search_content: String = "",
+
+    ) : Serializable {
     @PrimaryKey
     @SerializedName("id")
     var id: String = ""
+    var indexInResponse: Int = -1
+    var pageNumber: Int = 1
 }
 
 /*@SerializedName("id") val id : String,

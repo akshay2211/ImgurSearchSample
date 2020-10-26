@@ -5,10 +5,12 @@ import androidx.room.Room
 import com.interview.project.BuildConfig
 import com.interview.project.data.local.AppDatabase
 import com.interview.project.data.remote.ApiList
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.coroutines.CoroutineContext
 
 /**
  * Created by akshay on 24,October,2020
@@ -49,4 +51,8 @@ fun getDb(context: Context): AppDatabase {
             AppDatabase::class.java, "database-images"
         ).build()
     }
+}
+
+fun getCoroutineContext(): CoroutineContext {
+    return Dispatchers.IO
 }

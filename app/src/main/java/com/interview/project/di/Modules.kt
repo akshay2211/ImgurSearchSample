@@ -1,5 +1,7 @@
 package com.interview.project.di
 
+import androidx.lifecycle.SavedStateHandle
+import com.interview.project.data.repository.ImgurPostsRepository
 import com.interview.project.ui.main.MainActivityViewHolder
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -20,6 +22,11 @@ var databaseModule = module {
     single { getDb(androidApplication()) }
 }
 
+var repoModule = module {
+    single { getCoroutineContext() }
+    single { ImgurPostsRepository(get(), get(), get()) }
+}
+
 var viewModelModule = module {
-    viewModel { MainActivityViewHolder(androidApplication(), get(), get()) }
+    viewModel { (state: SavedStateHandle) -> MainActivityViewHolder(handle = state, get()) }
 }

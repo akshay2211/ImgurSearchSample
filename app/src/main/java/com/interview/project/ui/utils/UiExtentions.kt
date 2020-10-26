@@ -5,6 +5,8 @@ import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.graphics.Color
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.Window
 
@@ -35,3 +37,16 @@ fun Context.isDarkThemeOn(): Boolean {
     return resources.configuration.uiMode and
             Configuration.UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
 }
+
+fun String?.debounce(callback: (String) -> Unit) {
+    if (debounceRunnable != null) {
+        debounceHandler.removeCallbacks(debounceRunnable!!)
+    }
+    debounceRunnable = Runnable {
+        callback(this.toString())
+    }
+    debounceHandler.postDelayed(debounceRunnable!!, 350)
+}
+
+var debounceRunnable: Runnable? = null
+var debounceHandler: Handler = Handler(Looper.getMainLooper())
