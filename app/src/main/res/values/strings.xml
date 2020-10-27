@@ -7,6 +7,7 @@
     <string name="dialog_title_preference">Select Theme</string>
     <string name="cache_summary">Clear all stored values in local database</string>
     <string name="cache_title">Clear Storage</string>
+    <string name="internet_error">Internet Not Available</string>
     <string-array name="entries">
         <item>Light Theme</item>
         <item>Dark Theme</item>

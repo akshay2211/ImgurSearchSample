@@ -13,7 +13,7 @@
         app:useSimpleSummaryProvider="true" />
 
     <Preference
-        app:key="dialog_clearCache"
+        app:key="dialog_clear_cache"
         app:summary="@string/cache_summary"
         app:title="@string/cache_title" />
 

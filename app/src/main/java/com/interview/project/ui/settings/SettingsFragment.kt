@@ -23,7 +23,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
         var dialogPreference =
-            preferenceScreen.findPreference<Preference>("dialog_clearCache")
+            preferenceScreen.findPreference<Preference>("dialog_clear_cache")
+
         dialogPreference?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             Log.e("hello", "prefs")
             MaterialAlertDialogBuilder(requireContext()).apply {

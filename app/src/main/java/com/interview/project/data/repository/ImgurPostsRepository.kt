@@ -1,5 +1,6 @@
 package com.interview.project.data.repository
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -24,6 +25,7 @@ import kotlin.coroutines.CoroutineContext
  * akshay2211@github.io
  */
 class ImgurPostsRepository(
+    var context: Context,
     var db: AppDatabase,
     var apiList: ApiList,
     var coroutineContext: CoroutineContext
@@ -40,11 +42,6 @@ class ImgurPostsRepository(
 
                 Log.e("check", "insertResultIntoDb  start $start      page $page")
                 posts?.forEachIndexed { index, data ->
-
-                    //// TODO: 26/10/20 remove this snippit
-                    if (index > 10) {
-                        return@forEachIndexed
-                    }
                     if (!data.images.isNullOrEmpty()) {
                         //  Log.e("check images ", "${data.images!![0].title}")
                         CoroutineScope(this.coroutineContext).launch {
@@ -95,6 +92,7 @@ class ImgurPostsRepository(
 
     fun getImgurPosts(search_content: String = "", i: Int): LiveDataCollection<Images> {
         val boundaryCallback = CustomBoundaryCallback(
+            context = context,
             apiList = apiList,
             searchedContent = search_content,
             coroutineContext = coroutineContext,
