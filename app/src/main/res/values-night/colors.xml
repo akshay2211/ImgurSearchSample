@@ -5,7 +5,7 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="grey">#B2B5B7</color>
     <color name="darkGrey">#565F61</color>
-    <color name="background">#ffffff</color>
-    <color name="headingColor">#202020</color>
-    <color name="searchBackground">#F2F2F2</color>
+    <color name="background">#202020</color>
+    <color name="headingColor">#D2D7DA</color>
+    <color name="searchBackground">#313131</color>
 </resources>

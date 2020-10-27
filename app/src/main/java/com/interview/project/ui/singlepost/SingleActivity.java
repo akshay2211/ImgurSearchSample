@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -63,7 +64,7 @@ public class SingleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CustomWindow.setUpStatusNavigationBarColors(getWindow(), false, Color.WHITE);
+        CustomWindow.setUpStatusNavigationBarColors(getWindow(), CustomWindow.isDarkThemeOn(this), ContextCompat.getColor(this, R.color.background));
         setContentView(R.layout.activity_single);
         initialise();
         observe();

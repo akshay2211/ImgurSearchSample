@@ -2,11 +2,10 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:background">@android:color/white</item>
-        <item name="background">@android:color/white</item>
+        <item name="colorPrimary">@color/headingColor</item>
+        <item name="colorPrimaryDark">@color/background</item>
+        <item name="colorAccent">@color/headingColor</item>
+        <item name="toolbarStyle">@style/AppTheme.Toolbar</item>
         <!--&lt;!&ndash; enable window content transitions &ndash;&gt;
         <item name="android:windowActivityTransitions" tools:targetApi="lollipop">true</item>
 
@@ -22,8 +21,17 @@
 
     </style>
 
+    <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="titleTextAppearance">@style/TextAppearance.App.Headline6</item>
+    </style>
+
+    <style name="TextAppearance.App.Headline6" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="fontFamily">@font/quicksand_regular</item>
+        <item name="android:fontFamily">@font/quicksand_regular</item>
+    </style>
+
     <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
-        <item name="android:editTextColor">#f00</item>
+        <item name="android:editTextColor">@color/headingColor</item>
         <item name="android:textColorHint">@color/grey</item>
         <item name="editTextBackground">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>

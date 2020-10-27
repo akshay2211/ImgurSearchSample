@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context=".ui.singlepost.SingleActivity">
 
@@ -27,6 +28,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="56dp"
+            android:background="@color/searchBackground"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -55,12 +57,12 @@
             android:layout_height="48dp"
             android:layout_gravity="right|bottom"
             android:layout_marginRight="@dimen/horizontal_margin"
-            android:background="@android:color/transparent"
+            android:src="@drawable/ic_send"
+            android:tint="@color/headingColor"
+            app:tint="@color/headingColor"
             android:padding="12dp"
-            android:src="@drawable/ic_arrow_left"
             app:layout_constraintBottom_toBottomOf="@+id/appCompatEditText"
-            app:layout_constraintRight_toRightOf="parent"
-            app:tint="@color/colorPrimaryDark" />
+            app:layout_constraintRight_toRightOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/commentsRecyclerView"

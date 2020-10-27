@@ -3,4 +3,19 @@
     <string name="explore">Explore</string>
     <string name="retry">Retry</string>
     <string name="add_comments">Add Comments</string>
+    <string name="title_preference">Theme Selections</string>
+    <string name="dialog_title_preference">Select Theme</string>
+    <string name="cache_summary">Clear all stored values in local database</string>
+    <string name="cache_title">Clear Storage</string>
+    <string-array name="entries">
+        <item>Light Theme</item>
+        <item>Dark Theme</item>
+        <item>Auto</item>
+    </string-array>
+
+    <string-array name="entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>

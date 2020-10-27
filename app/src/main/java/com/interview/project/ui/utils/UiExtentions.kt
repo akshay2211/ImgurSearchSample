@@ -3,19 +3,26 @@
 package com.interview.project.ui.utils
 
 import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.interview.project.R
 import com.interview.project.ui.adapters.ImagesListAdapter
+import com.interview.project.ui.settings.SettingsActivity
 
 
 /**
@@ -42,8 +49,15 @@ fun Window.setUpStatusNavigationBarColors(isLight: Boolean = false, colorCode: I
 }
 
 fun Context.isDarkThemeOn(): Boolean {
-    return resources.configuration.uiMode and
-            Configuration.UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
+    var key = PreferenceManager.getDefaultSharedPreferences(this).getString("list_theme", "1")
+    Log.e("key", "value ${key}")
+    return when (key) {
+        "2" -> true
+        "1" -> false
+        else -> return resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK == UI_MODE_NIGHT_YES
+    }
+
 }
 
 fun String?.debounce(callback: (String) -> Unit) {
@@ -91,5 +105,28 @@ fun Context.getGridLayoutManager(
                 }
             }
         }
+    }
+}
+
+fun Context.startSettingsActivity() {
+    startActivity(Intent(this, SettingsActivity::class.java))
+}
+
+fun SharedPreferences?.setupTheme(key: String?, resources: Resources) {
+    var value = this?.getString(key, "")
+    Log.e("value change ", "of list theme $key $value")
+    val def = if (resources.configuration.uiMode and
+        Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+    ) {
+        AppCompatDelegate.MODE_NIGHT_YES
+
+    } else {
+        AppCompatDelegate.MODE_NIGHT_NO
+    }
+
+    when (value) {
+        "2" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        "1" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        else -> AppCompatDelegate.setDefaultNightMode(def)
     }
 }

@@ -1,10 +1,12 @@
 package com.interview.project
 
 import androidx.multidex.MultiDexApplication
+import androidx.preference.PreferenceManager
 import com.interview.project.di.databaseModule
 import com.interview.project.di.networkModule
 import com.interview.project.di.repoModule
 import com.interview.project.di.viewModelModule
+import com.interview.project.ui.utils.setupTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -25,5 +27,7 @@ class App : MultiDexApplication() {
             koin.loadModules(listOf(databaseModule, networkModule, viewModelModule, repoModule))
             koin.createRootScope()
         }
+
+        PreferenceManager.getDefaultSharedPreferences(this).setupTheme("list_theme", resources)
     }
 }
