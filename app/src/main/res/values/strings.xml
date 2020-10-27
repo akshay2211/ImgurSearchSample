@@ -1,13 +1,16 @@
 <resources>
-    <string name="app_name">SampleApp</string>
-    <string name="explore">Explore</string>
-    <string name="retry">Retry</string>
-    <string name="add_comments">Add Comments</string>
-    <string name="title_preference">Theme Selections</string>
-    <string name="dialog_title_preference">Select Theme</string>
-    <string name="cache_summary">Clear all stored values in local database</string>
-    <string name="cache_title">Clear Storage</string>
-    <string name="internet_error">Internet Not Available</string>
+    <string name="app_name" translatable="false">SampleApp</string>
+    <string name="explore" translatable="false">Explore</string>
+    <string name="retry" translatable="false">Retry</string>
+    <string name="add_comments" translatable="false">Add Comments</string>
+    <string name="title_preference" translatable="false">Theme Selections</string>
+    <string name="dialog_title_preference" translatable="false">Select Theme</string>
+    <string name="cache_summary" translatable="false">Clear all stored values in local database</string>
+    <string name="cache_title" translatable="false">Clear Storage</string>
+    <string name="internet_error" translatable="false">Internet Not Available</string>
+    <string name="main_image">main image</string>
+    <string name="divider">divider</string>
+
     <string-array name="entries">
         <item>Light Theme</item>
         <item>Dark Theme</item>

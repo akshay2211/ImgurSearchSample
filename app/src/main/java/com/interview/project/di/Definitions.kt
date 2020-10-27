@@ -22,7 +22,6 @@ import kotlin.coroutines.CoroutineContext
 
 
 fun getLogInterceptor(): HttpLoggingInterceptor {
-
     return HttpLoggingInterceptor().apply {
         if (BuildConfig.DEBUG) {
             setLevel(HttpLoggingInterceptor.Level.BODY)

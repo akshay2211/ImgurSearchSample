@@ -1,11 +1,9 @@
 package com.interview.project.ui.utils
 
 import android.content.Context
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.paging.PagedList
 import androidx.paging.PagingRequestHelper
-import com.google.gson.Gson
 import com.interview.project.R
 import com.interview.project.data.remote.ApiList
 import com.interview.project.model.BaseData
@@ -19,6 +17,11 @@ import kotlin.coroutines.CoroutineContext
 /**
  * Created by akshay on 25,October,2020
  * akshay2211@github.io
+ */
+
+/**
+ * api calls are triggered from [CustomBoundaryCallback] and the paged lists data is managed by
+ * the paging library
  */
 class CustomBoundaryCallback(
     private val context: Context,
@@ -36,20 +39,11 @@ class CustomBoundaryCallback(
 
     @MainThread
     override fun onZeroItemsLoaded() {
-        Log.e("onZeroItemsLoaded", "onZeroItemsLoaded")
         helper.runIfNotRunning(PagingRequestHelper.RequestType.INITIAL) {
-            var response: Response<BaseData>? = null
+            var response: Response<BaseData>?
             CoroutineScope(this.coroutineContext).launch {
                 try {
                     response = apiList.getSearchList("1", searchedContent)
-                    Log.e("response api", "onZeroItemsLoaded ->${response?.code()}")
-                    Log.e(
-                        "response api",
-                        "onZeroItemsLoaded ->${Gson().toJson(response?.body())} ${
-                            Gson().toJson(response?.errorBody())
-                        }"
-                    )
-
                     if (response?.isSuccessful != true) {
                         var error = response?.errorBody()
                         it.recordFailure(IllegalStateException(error?.extractMessage()))
@@ -59,10 +53,6 @@ class CustomBoundaryCallback(
                 } catch (e: Exception) {
                     e.printStackTrace()
                     it.recordFailure(IllegalStateException(context.resources.getString(R.string.internet_error)))
-                    Log.e(
-                        "response api",
-                        "onZeroItemsLoaded Exception ->${response?.message()}   ${response?.code()}"
-                    )
                 }
             }
         }
@@ -71,10 +61,8 @@ class CustomBoundaryCallback(
 
     @MainThread
     override fun onItemAtEndLoaded(itemAtEnd: Images) {
-        Log.e("onItemAtEndLoaded", "onItemAtEndLoaded ${itemAtEnd.pageNumber + 1}")
         helper.runIfNotRunning(PagingRequestHelper.RequestType.AFTER) {
-            Log.e("onItemAtEndLoaded", "actual call onItemAtEndLoaded ${itemAtEnd.pageNumber + 1}")
-            var response: Response<BaseData>? = null
+            var response: Response<BaseData>?
             CoroutineScope(this.coroutineContext).launch {
                 try {
                     response =
@@ -82,13 +70,6 @@ class CustomBoundaryCallback(
                             (itemAtEnd.pageNumber + 1).toString(),
                             searchedContent
                         )
-                    Log.e("response api", "onItemAtEndLoaded ->${response?.code()}")
-                    Log.e(
-                        "response api",
-                        "onItemAtEndLoaded ->${Gson().toJson(response?.body())} ${
-                            Gson().toJson(response?.errorBody())
-                        }"
-                    )
                     if (response?.body() == null) {
                         var error = response?.errorBody()
                         it.recordFailure(IllegalStateException(error?.extractMessage()))
@@ -98,7 +79,6 @@ class CustomBoundaryCallback(
                 } catch (e: Exception) {
                     e.printStackTrace()
                     it.recordFailure(IllegalStateException(context.resources.getString(R.string.internet_error)))
-                    Log.e("response api", "onItemAtEndLoaded Exception ->${response?.code()}")
                 }
             }
 

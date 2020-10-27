@@ -12,6 +12,10 @@ import org.koin.dsl.module
  * akshay2211@github.io
  */
 
+
+/**
+ * modules for dependency injection where [single] represents singleton class
+ */
 var networkModule = module {
     single { getLogInterceptor() }
     single { returnRetrofit(get()) }

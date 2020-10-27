@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.FitCenter
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.bumptech.glide.signature.ObjectKey
 import com.interview.project.R
 import com.interview.project.model.Images
 import com.interview.project.ui.utils.GlideRequests
@@ -19,12 +19,17 @@ import com.interview.project.ui.utils.NetworkState
 import com.interview.project.ui.utils.State
 import kotlinx.android.synthetic.main.images_row.view.*
 import kotlinx.android.synthetic.main.network_state_item.view.*
+import java.util.*
 
 /**
  * Created by akshay on 24,October,2020
  * akshay2211@github.io
  */
 
+/**
+ * [ImagesListAdapter] is a [PagedListAdapter] with two view holders
+ * [ImagesViewHolder] for images and [NetworkStateItemViewHolder] for showing error and loading states
+ */
 class ImagesListAdapter(
     var glideRequests: GlideRequests,
     private val retryCallback: () -> Unit,
@@ -132,11 +137,11 @@ class ImagesViewHolder(
             .error(ColorDrawable(Color.GRAY))
             .thumbnail(
                 glideRequests.load(images?.link).override(50)
-                    .transform(CenterCrop(), FitCenter())
+                    .transform(CenterCrop())
             )
-            .transform(CenterCrop(), FitCenter())
+            .transform(CenterCrop())
+            .signature(ObjectKey(UUID.randomUUID().toString()))
             .transition(withCrossFade())
-            // .override(WidthPX,images!!.height * WidthPX / images!!.width)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(itemView.imageView)
     }

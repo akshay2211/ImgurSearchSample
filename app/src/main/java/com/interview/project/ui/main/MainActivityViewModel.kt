@@ -10,6 +10,11 @@ import com.interview.project.data.repository.ImgurPostsRepository
  * Created by akshay on 24,October,2020
  * akshay2211@github.io
  */
+
+/**
+ * viewModel [MainActivityViewModel] contains [SavedStateHandle] and [ImgurPostsRepository] in its primary
+ * constructors which are injected by [Koin]
+ */
 class MainActivityViewModel(
     val handle: SavedStateHandle,
     private val repository: ImgurPostsRepository

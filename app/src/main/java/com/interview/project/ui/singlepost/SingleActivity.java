@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -72,7 +71,6 @@ public class SingleActivity extends AppCompatActivity {
 
     private void observe() {
         db.getValue().commentsDao().getAllComments(images.getId()).observe(this, comments -> {
-            Log.e("retrieveing ", "comments " + comments.size());
             commentsAdapter.addDataInList(comments);
         });
     }
@@ -124,12 +122,10 @@ public class SingleActivity extends AppCompatActivity {
         switch (newConfig.orientation) {
             case ORIENTATION_PORTRAIT: {
                 width = Constants.INSTANCE.getWidthPX();
-                Log.e("orientation", "-> " + newConfig.orientation + "    " + ORIENTATION_PORTRAIT);
             }
             break;
             case ORIENTATION_LANDSCAPE: {
                 width = Constants.INSTANCE.getHeightPX();
-                Log.e("orientation", "-> " + newConfig.orientation + "    " + ORIENTATION_LANDSCAPE);
             }
             break;
 

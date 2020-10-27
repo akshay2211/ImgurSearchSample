@@ -1,7 +1,6 @@
 package com.interview.project.ui.utils
 
 import android.util.DisplayMetrics
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingRequestHelper
@@ -13,6 +12,7 @@ import org.json.JSONObject
  * akshay2211@github.io
  */
 
+//extracts the error message from the errorbody from response
 fun ResponseBody?.extractMessage(): String? {
     if (this == null) {
         return ""
@@ -24,13 +24,14 @@ fun ResponseBody?.extractMessage(): String? {
     }
 }
 
-
+//extracts the error message emited from [PagingRequestHelper]
 private fun getErrorMessage(report: PagingRequestHelper.StatusReport): String {
     return PagingRequestHelper.RequestType.values().mapNotNull {
         report.getErrorFor(it)?.message
     }.first()
 }
 
+//default NetworkState data passes in network status instance
 fun PagingRequestHelper.createStatusLiveData(): LiveData<NetworkState> {
     val liveData = MutableLiveData<NetworkState>()
     addListener { report ->
@@ -45,29 +46,9 @@ fun PagingRequestHelper.createStatusLiveData(): LiveData<NetworkState> {
     return liveData
 }
 
+//retrieve screen density and size in pixels
 fun DisplayMetrics.getScreenSize() {
     Constants.HeightPX = heightPixels
     Constants.WidthPX = widthPixels
     Constants.DENSITY = density
-    Log.e(
-        "WidthPX HeightPX",
-        "" + Constants.WidthPX.toString() + " " + Constants.HeightPX
-    )
 }
-
-fun Int.toPx(): Int {
-    return (this * Constants.DENSITY).toInt()
-}
-
-fun Float.toPx(): Float {
-    return (this * Constants.DENSITY)
-}
-
-fun Int.toDp(): Int {
-    return (this / Constants.DENSITY).toInt()
-}
-
-fun Float.toDp(): Float {
-    return (this / Constants.DENSITY)
-}
-

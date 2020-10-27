@@ -11,6 +11,7 @@ import com.interview.project.ui.utils.setUpStatusNavigationBarColors
 import com.interview.project.ui.utils.setupTheme
 import kotlinx.android.synthetic.main.settings_activity.*
 
+
 class SettingsActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     lateinit var sharedPreferences: SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {

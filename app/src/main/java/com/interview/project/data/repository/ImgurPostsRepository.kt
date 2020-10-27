@@ -1,7 +1,6 @@
 package com.interview.project.data.repository
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.switchMap
@@ -24,6 +23,12 @@ import kotlin.coroutines.CoroutineContext
  * Created by akshay on 25,October,2020
  * akshay2211@github.io
  */
+
+/**
+ * in [ImgurPostsRepository] the paged lists retrieved from remote api is first stored in local database
+ * and then emited to the UI via Live data, API's are called by the [CustomBoundaryCallback] when all local data is
+ * used.
+ */
 class ImgurPostsRepository(
     var context: Context,
     var db: AppDatabase,
@@ -40,21 +45,14 @@ class ImgurPostsRepository(
                 var start = db.imagesDao().getNextIndexInSearch(search_content) + 1
                 var page = db.imagesDao().getNextPageInSearch(search_content) + 1
 
-                Log.e("check", "insertResultIntoDb  start $start      page $page")
-                posts?.forEachIndexed { index, data ->
+                posts?.forEachIndexed { _, data ->
                     if (!data.images.isNullOrEmpty()) {
-                        //  Log.e("check images ", "${data.images!![0].title}")
                         CoroutineScope(this.coroutineContext).launch {
-                            db.imagesDao().insert(data.images!!.mapIndexed { index1, images ->
-
+                            db.imagesDao().insert(data.images!!.mapIndexed { _, images ->
                                 images.indexInResponse = start
                                 start++
                                 images.pageNumber = page
                                 images.search_content = search_content
-                                Log.e(
-                                    "images ",
-                                    "$page      --           ${images.link}  ${images.indexInResponse}"
-                                )
                                 images
                             })
                         }
@@ -72,7 +70,6 @@ class ImgurPostsRepository(
 
 
                 var response = apiList.getSearchList("1", search_content)
-                Log.e("refresh response api", "->${response.code()}")
                 if (!response.isSuccessful) {
                     var error = response.errorBody()
                     networkState.value = NetworkState.error(error?.extractMessage())
@@ -91,6 +88,7 @@ class ImgurPostsRepository(
     }
 
     fun getImgurPosts(search_content: String = "", i: Int): LiveDataCollection<Images> {
+
         val boundaryCallback = CustomBoundaryCallback(
             context = context,
             apiList = apiList,

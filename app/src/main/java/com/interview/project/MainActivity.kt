@@ -3,10 +3,10 @@ package com.interview.project
 import android.content.res.Configuration
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.interview.project.ui.adapters.ImagesListAdapter
@@ -20,8 +20,11 @@ import org.koin.androidx.viewmodel.ext.android.stateViewModel
 class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener {
     private val liveViewModel: MainActivityViewModel by stateViewModel()
     private lateinit var imagesAdapter: ImagesListAdapter
+    private lateinit var manager: GridLayoutManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         window.setUpStatusNavigationBarColors(
             isDarkThemeOn(),
             ContextCompat.getColor(this, R.color.background)
@@ -29,13 +32,13 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener {
         resources.displayMetrics.getScreenSize()
         setContentView(R.layout.activity_main)
         initAdapter()
+        initObservers()
         initSwipeToRefresh()
         initSearch()
         initSettings()
     }
 
-
-
+    //initializer
     private fun initAdapter() {
         val glide = GlideApp.with(this)
         imagesAdapter = ImagesListAdapter(glide, {
@@ -43,11 +46,27 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener {
         }) {
             SingleActivity.startActivity(this, it)
         }
-        var manager = getGridLayoutManager(ORIENTATION_PORTRAIT, imagesAdapter)
+        manager = getGridLayoutManager(ORIENTATION_PORTRAIT, imagesAdapter)
         recyclerView.apply {
             layoutManager = manager
             adapter = imagesAdapter
         }
+    }
+
+    private fun initSwipeToRefresh() {
+        liveViewModel.refreshState.observe(this, {
+            swipe_refresh.isRefreshing = it == NetworkState.LOADING
+        })
+        swipe_refresh.setOnRefreshListener {
+            liveViewModel.refresh()
+        }
+    }
+
+    /*
+    * observes the posts data retrieved from [CustomBoundaryCallback] methods
+    * called when the data in database is finished
+    */
+    private fun initObservers() {
         liveViewModel.posts.observe(this, {
             imagesAdapter.submitList(it) {
                 // Workaround for an issue where RecyclerView incorrectly uses the loading / spinner
@@ -60,7 +79,6 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener {
             }
         })
         liveViewModel.networkState.observe(this, {
-            Log.e("networkState", "${it.State.name}")
             imagesAdapter.setNetworkState(it)
         })
     }
@@ -68,14 +86,13 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener {
 
     private fun initSearch() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                newText.debounce { string ->
-                    updatedSubredditFromInput()
+                newText.debounce {
+                    updatedSearchFromInput()
                 }
                 return false
             }
@@ -83,7 +100,11 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener {
         searchView.setQuery("vanilla", true)
     }
 
-    private fun updatedSubredditFromInput() {
+    /*
+    * caching the Search keywords in [SavedStateHandle] as key value pairs
+    * so that they can be retrieved locally
+     */
+    private fun updatedSearchFromInput() {
         searchView.query.trim().toString().let {
             if (it.isNotEmpty()) {
                 if (liveViewModel.showSearchedContent(it)) {
@@ -100,14 +121,6 @@ class MainActivity : AppCompatActivity(), AppBarLayout.OnOffsetChangedListener {
         recyclerView.layoutManager = manager
     }
 
-    private fun initSwipeToRefresh() {
-        liveViewModel.refreshState.observe(this, {
-            swipe_refresh.isRefreshing = it == NetworkState.LOADING
-        })
-        swipe_refresh.setOnRefreshListener {
-            liveViewModel.refresh()
-        }
-    }
 
     override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
         //The Refresh must be only active when the offset is zero :

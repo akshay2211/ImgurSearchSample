@@ -11,15 +11,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:fitsSystemWindows="true">
 
         <ImageView
             android:id="@+id/singleImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/background_dark"
             android:minHeight="200dp"
+            android:contentDescription="@string/main_image"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
@@ -46,8 +46,8 @@
             android:hint="@string/add_comments"
             android:lineHeight="20dp"
             android:maxLines="1"
-            android:paddingLeft="@dimen/horizontal_margin"
-            android:paddingRight="50dp"
+            android:paddingStart="@dimen/horizontal_margin"
+            android:paddingEnd="50dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/singleImageView" />
 
@@ -55,8 +55,8 @@
             android:id="@+id/appCompatImageView"
             android:layout_width="50dp"
             android:layout_height="48dp"
-            android:layout_gravity="right|bottom"
-            android:layout_marginRight="@dimen/horizontal_margin"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="@dimen/horizontal_margin"
             android:src="@drawable/ic_send"
             android:tint="@color/headingColor"
             app:tint="@color/headingColor"
