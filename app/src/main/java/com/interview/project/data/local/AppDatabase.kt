@@ -1,7 +1,9 @@
 package com.interview.project.data.local
 
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.*
+import com.interview.project.model.Comments
 import com.interview.project.model.Images
 
 /**
@@ -9,16 +11,15 @@ import com.interview.project.model.Images
  * akshay2211@github.io
  */
 
-@Database(entities = [Images::class], version = 1)
+@Database(entities = [Images::class, Comments::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun imagesDao(): ImagesDao
+    abstract fun commentsDao(): CommentsDao
 
 }
 
 @Dao
 interface ImagesDao {
-
-
     @Query("SELECT * FROM images_table WHERE search_content = :search_content ORDER BY indexInResponse ASC")
     fun postsBySearchContents(search_content: String): DataSource.Factory<Int, Images>
 
@@ -40,4 +41,15 @@ interface ImagesDao {
 
     @Query("SELECT COUNT(id) FROM images_table WHERE search_content = :search_content")
     fun getCount(search_content: String): Int
+}
+
+@Dao
+interface CommentsDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(comments: Comments)
+
+    @Query("SELECT * FROM comments_table WHERE post_id = :post_id")
+    fun getAllComments(post_id: String): LiveData<List<Comments>>
+
+
 }

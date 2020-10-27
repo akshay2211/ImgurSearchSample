@@ -7,16 +7,29 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:background">@android:color/white</item>
         <item name="background">@android:color/white</item>
+        <!--&lt;!&ndash; enable window content transitions &ndash;&gt;
+        <item name="android:windowActivityTransitions" tools:targetApi="lollipop">true</item>
+
+        &lt;!&ndash; specify enter and exit transitions &ndash;&gt;
+        <item name="android:windowEnterTransition" tools:targetApi="lollipop">@transition/explode</item>
+        <item name="android:windowExitTransition" tools:targetApi="lollipop">@transition/explode</item>
+
+        &lt;!&ndash; specify shared element transitions &ndash;&gt;
+        <item name="android:windowSharedElementEnterTransition" tools:targetApi="lollipop">
+            @transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition" tools:targetApi="lollipop">
+            @transition/change_image_transform</item>-->
+
     </style>
 
     <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="android:editTextColor">#f00</item>
-        <item name="android:textColor">#f00</item>
         <item name="android:textColorHint">@color/grey</item>
         <item name="editTextBackground">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:queryBackground" tools:targetApi="lollipop">@android:color/transparent
         </item>
+        <item name="fontFamily">@font/quicksand_regular</item>
         <item name="iconTint">@color/darkGrey</item>
         <item name="android:background">@drawable/search_background</item>
     </style>

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.FitCenter
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
 import com.interview.project.R
 import com.interview.project.model.Images
@@ -26,7 +25,11 @@ import kotlinx.android.synthetic.main.network_state_item.view.*
  * akshay2211@github.io
  */
 
-class ImagesListAdapter(var glideRequests: GlideRequests, private val retryCallback: () -> Unit) :
+class ImagesListAdapter(
+    var glideRequests: GlideRequests,
+    private val retryCallback: () -> Unit,
+    private val clickCallback: (images: Images) -> Unit
+) :
     PagedListAdapter<Images, RecyclerView.ViewHolder>(POST_COMPARATOR) {
     private var networkState: NetworkState? = null
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -53,7 +56,7 @@ class ImagesListAdapter(var glideRequests: GlideRequests, private val retryCallb
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            R.layout.images_row -> ImagesViewHolder(parent, glideRequests)
+            R.layout.images_row -> ImagesViewHolder(parent, glideRequests, clickCallback)
             R.layout.network_state_item -> NetworkStateItemViewHolder(parent, retryCallback)
             else -> throw IllegalArgumentException("unknown view type $viewType")
         }
@@ -104,23 +107,38 @@ class ImagesListAdapter(var glideRequests: GlideRequests, private val retryCallb
 }
 
 
-class ImagesViewHolder(parent: ViewGroup, var glideRequests: GlideRequests) :
+class ImagesViewHolder(
+    parent: ViewGroup,
+    var glideRequests: GlideRequests,
+    private val clickCallback: (image: Images) -> Unit
+) :
     RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(
             R.layout.images_row, parent, false
         )
     ) {
+    private var images: Images? = null
+
+    init {
+        itemView.imageView.setOnClickListener {
+            images?.let {
+                clickCallback(it)
+            }
+        }
+    }
+
     fun bindTo(images: Images?) {
+        this.images = images
         glideRequests.load(images?.link)
-            .placeholder(ColorDrawable(Color.CYAN))
+            .placeholder(ColorDrawable(Color.GRAY))
             .error(ColorDrawable(Color.GRAY))
             .thumbnail(
                 glideRequests.load(images?.link).override(50)
-                    .transform(CenterCrop(), FitCenter(), RoundedCorners(5))
+                    .transform(CenterCrop(), FitCenter())
             )
-            .transform(CenterCrop(), FitCenter(), RoundedCorners(30))
+            .transform(CenterCrop(), FitCenter())
             .transition(withCrossFade())
-            .override(300)
+            // .override(WidthPX,images!!.height * WidthPX / images!!.width)
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(itemView.imageView)
     }

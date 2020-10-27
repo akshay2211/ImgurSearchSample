@@ -1,55 +1,48 @@
 package com.interview.project
 
+import android.content.res.Configuration
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.interview.project.ui.adapters.ImagesListAdapter
-import com.interview.project.ui.main.MainActivityViewHolder
-import com.interview.project.ui.utils.GlideApp
-import com.interview.project.ui.utils.debounce
-import com.interview.project.ui.utils.setUpStatusNavigationBarColors
+import com.interview.project.ui.main.MainActivityViewModel
+import com.interview.project.ui.singlepost.SingleActivity
+import com.interview.project.ui.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_header.*
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
 class MainActivity : AppCompatActivity() {
-    val liveViewModel: MainActivityViewHolder by stateViewModel()
-    var ctx = this
+    private val liveViewModel: MainActivityViewModel by stateViewModel()
+    private lateinit var imagesAdapter: ImagesListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setUpStatusNavigationBarColors()
+        resources.displayMetrics.getScreenSize()
         setContentView(R.layout.activity_main)
         initAdapter()
-
-        // initSwipeToRefresh()
+        initSwipeToRefresh()
         initSearch()
     }
 
+
     private fun initAdapter() {
         val glide = GlideApp.with(this)
-        val adapter = ImagesListAdapter(glide) {
+        imagesAdapter = ImagesListAdapter(glide, {
             liveViewModel.retry()
+        }) {
+            SingleActivity.startActivity(this, it)
         }
-        var manager = GridLayoutManager(
-            this, 4,
-            GridLayoutManager.VERTICAL, false
-        ).apply {
-            spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
-                override fun getSpanSize(position: Int): Int {
-                    return when (adapter.getItemViewType(position)) {
-                        R.layout.images_row -> 1
-                        R.layout.network_state_item -> 4
-                        else -> 1
-                    }
-                }
-            }
+        var manager = getGridLayoutManager(ORIENTATION_PORTRAIT, imagesAdapter)
+        recyclerView.apply {
+            layoutManager = manager
+            adapter = adapter
         }
-        recyclerView.layoutManager = manager
-        recyclerView.adapter = adapter
         liveViewModel.posts.observe(this, {
-            adapter.submitList(it) {
+            imagesAdapter.submitList(it) {
                 // Workaround for an issue where RecyclerView incorrectly uses the loading / spinner
                 // item added to the end of the list as an anchor during initial load.
                 val layoutManager = manager
@@ -60,9 +53,11 @@ class MainActivity : AppCompatActivity() {
             }
         })
         liveViewModel.networkState.observe(this, {
-            adapter.setNetworkState(it)
+            Log.e("networkState", "${it.State.name}")
+            imagesAdapter.setNetworkState(it)
         })
     }
+
 
     private fun initSearch() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -91,4 +86,20 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        var manager = getGridLayoutManager(newConfig.orientation, imagesAdapter)
+        recyclerView.layoutManager = manager
+    }
+
+    private fun initSwipeToRefresh() {
+        liveViewModel.refreshState.observe(this, {
+            swipe_refresh.isRefreshing = it == NetworkState.LOADING
+        })
+        swipe_refresh.setOnRefreshListener {
+            liveViewModel.refresh()
+        }
+    }
+
 }

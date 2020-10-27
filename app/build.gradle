@@ -56,6 +56,8 @@ dependencies {
     // Design
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
 
     def multidex_version = "2.0.1"
     implementation "androidx.multidex:multidex:$multidex_version"
@@ -71,6 +73,7 @@ dependencies {
     def koin_version = "2.1.6"
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+    //implementation "org.koin:koin-java:$koin_version"
 
     //Android Components
     //Paging

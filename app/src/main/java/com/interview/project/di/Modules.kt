@@ -2,7 +2,7 @@ package com.interview.project.di
 
 import androidx.lifecycle.SavedStateHandle
 import com.interview.project.data.repository.ImgurPostsRepository
-import com.interview.project.ui.main.MainActivityViewHolder
+import com.interview.project.ui.main.MainActivityViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -28,5 +28,5 @@ var repoModule = module {
 }
 
 var viewModelModule = module {
-    viewModel { (state: SavedStateHandle) -> MainActivityViewHolder(handle = state, get()) }
+    viewModel { (state: SavedStateHandle) -> MainActivityViewModel(handle = state, get()) }
 }
