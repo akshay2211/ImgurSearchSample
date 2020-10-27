@@ -4,4 +4,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="3dp"
-    android:src="@color/colorAccent" />
+    android:src="@color/headingColor" />

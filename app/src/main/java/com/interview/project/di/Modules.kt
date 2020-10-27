@@ -24,7 +24,7 @@ var databaseModule = module {
 
 var repoModule = module {
     single { getCoroutineContext() }
-    single { ImgurPostsRepository(get(), get(), get()) }
+    single { ImgurPostsRepository(androidApplication(), get(), get(), get()) }
 }
 
 var viewModelModule = module {

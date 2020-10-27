@@ -47,8 +47,6 @@ class ImagesListAdapter(
         payloads: MutableList<Any>
     ) {
         if (payloads.isNotEmpty()) {
-            val item = getItem(position)
-            //    (holder as ImagesViewHolder).updateScore(item)
         } else {
             onBindViewHolder(holder, position)
         }

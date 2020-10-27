@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "407e41c34548bea3d8b006a954dc8a08",
+    "identityHash": "955902efddea9ca93924bcff5ad2d6cf",
     "entities": [
       {
         "tableName": "images_table",
@@ -104,12 +104,44 @@
           }
         ],
         "foreignKeys": []
+      },
+      {
+        "tableName": "comments_table",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `post_id` TEXT NOT NULL, `comment_content` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "post_id",
+            "columnName": "post_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "comment_content",
+            "columnName": "comment_content",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '407e41c34548bea3d8b006a954dc8a08')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '955902efddea9ca93924bcff5ad2d6cf')"
     ]
   }
 }

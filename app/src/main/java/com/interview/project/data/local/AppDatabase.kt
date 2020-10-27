@@ -51,5 +51,6 @@ interface CommentsDao {
     @Query("SELECT * FROM comments_table WHERE post_id = :post_id")
     fun getAllComments(post_id: String): LiveData<List<Comments>>
 
-
+    @Query("DELETE FROM comments_table")
+    suspend fun deleteTable()
 }

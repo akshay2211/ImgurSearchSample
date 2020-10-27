@@ -1,10 +1,12 @@
 package com.interview.project.ui.utils
 
+import android.content.Context
 import android.util.Log
 import androidx.annotation.MainThread
 import androidx.paging.PagedList
 import androidx.paging.PagingRequestHelper
 import com.google.gson.Gson
+import com.interview.project.R
 import com.interview.project.data.remote.ApiList
 import com.interview.project.model.BaseData
 import com.interview.project.model.Images
@@ -19,6 +21,7 @@ import kotlin.coroutines.CoroutineContext
  * akshay2211@github.io
  */
 class CustomBoundaryCallback(
+    private val context: Context,
     private val searchedContent: String,
     private val apiList: ApiList,
     private val handleResponse: (String, BaseData?) -> Unit,
@@ -55,7 +58,7 @@ class CustomBoundaryCallback(
                     insertItemsIntoDb(response!!, it)
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    it.recordFailure(IllegalStateException("error"))
+                    it.recordFailure(IllegalStateException(context.resources.getString(R.string.internet_error)))
                     Log.e(
                         "response api",
                         "onZeroItemsLoaded Exception ->${response?.message()}   ${response?.code()}"
@@ -94,7 +97,7 @@ class CustomBoundaryCallback(
                     insertItemsIntoDb(response!!, it)
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    it.recordFailure(IllegalStateException("error"))
+                    it.recordFailure(IllegalStateException(context.resources.getString(R.string.internet_error)))
                     Log.e("response api", "onItemAtEndLoaded Exception ->${response?.code()}")
                 }
             }

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="headings">42sp</dimen>
-    <dimen name="small_headings">28sp</dimen>
-    <dimen name="page_title">20sp</dimen>
-    <dimen name="para_text">14sp</dimen>
     <dimen name="horizontal_margin">16dp</dimen>
     <dimen name="vertical_margin">16dp</dimen>
 
