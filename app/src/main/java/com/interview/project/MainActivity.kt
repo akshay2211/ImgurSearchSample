@@ -1,25 +1,29 @@
 package com.interview.project
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.interview.project.ui.adapters.ImagesListAdapter
-import com.interview.project.ui.main.MainActivityViewHolder
+import com.interview.project.ui.main.MainActivityViewModel
+import com.interview.project.ui.singlepost.SingleActivity
 import com.interview.project.ui.utils.GlideApp
 import com.interview.project.ui.utils.debounce
+import com.interview.project.ui.utils.getScreenSize
 import com.interview.project.ui.utils.setUpStatusNavigationBarColors
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.search_header.*
 import org.koin.androidx.viewmodel.ext.android.stateViewModel
 
 class MainActivity : AppCompatActivity() {
-    val liveViewModel: MainActivityViewHolder by stateViewModel()
+    val liveViewModel: MainActivityViewModel by stateViewModel()
     var ctx = this
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setUpStatusNavigationBarColors()
+        resources.displayMetrics.getScreenSize()
         setContentView(R.layout.activity_main)
         initAdapter()
 
@@ -29,8 +33,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun initAdapter() {
         val glide = GlideApp.with(this)
-        val adapter = ImagesListAdapter(glide) {
+        val adapter = ImagesListAdapter(glide, {
             liveViewModel.retry()
+        }) {
+            SingleActivity.startActivity(this, it)
         }
         var manager = GridLayoutManager(
             this, 4,
@@ -60,6 +66,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
         liveViewModel.networkState.observe(this, {
+            Log.e("networkState", "${it.State.name}")
             adapter.setNetworkState(it)
         })
     }

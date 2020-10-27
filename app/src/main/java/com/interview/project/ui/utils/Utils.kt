@@ -1,5 +1,7 @@
 package com.interview.project.ui.utils
 
+import android.util.DisplayMetrics
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagingRequestHelper
@@ -42,3 +44,30 @@ fun PagingRequestHelper.createStatusLiveData(): LiveData<NetworkState> {
     }
     return liveData
 }
+
+fun DisplayMetrics.getScreenSize() {
+    Constants.HeightPX = heightPixels
+    Constants.WidthPX = widthPixels
+    Constants.DENSITY = density
+    Log.e(
+        "WidthPX HeightPX",
+        "" + Constants.WidthPX.toString() + " " + Constants.HeightPX
+    )
+}
+
+fun Int.toPx(): Int {
+    return (this * Constants.DENSITY).toInt()
+}
+
+fun Float.toPx(): Float {
+    return (this * Constants.DENSITY)
+}
+
+fun Int.toDp(): Int {
+    return (this / Constants.DENSITY).toInt()
+}
+
+fun Float.toDp(): Float {
+    return (this / Constants.DENSITY)
+}
+

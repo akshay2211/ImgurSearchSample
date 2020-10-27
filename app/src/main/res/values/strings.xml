@@ -2,4 +2,5 @@
     <string name="app_name">SampleApp</string>
     <string name="explore">Explore</string>
     <string name="retry">Retry</string>
+    <string name="add_comments">Add Comments</string>
 </resources>

@@ -7,6 +7,19 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:background">@android:color/white</item>
         <item name="background">@android:color/white</item>
+        <!--&lt;!&ndash; enable window content transitions &ndash;&gt;
+        <item name="android:windowActivityTransitions" tools:targetApi="lollipop">true</item>
+
+        &lt;!&ndash; specify enter and exit transitions &ndash;&gt;
+        <item name="android:windowEnterTransition" tools:targetApi="lollipop">@transition/explode</item>
+        <item name="android:windowExitTransition" tools:targetApi="lollipop">@transition/explode</item>
+
+        &lt;!&ndash; specify shared element transitions &ndash;&gt;
+        <item name="android:windowSharedElementEnterTransition" tools:targetApi="lollipop">
+            @transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition" tools:targetApi="lollipop">
+            @transition/change_image_transform</item>-->
+
     </style>
 
     <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">

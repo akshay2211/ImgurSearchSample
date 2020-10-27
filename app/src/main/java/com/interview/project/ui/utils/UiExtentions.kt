@@ -1,3 +1,4 @@
+@file:JvmName("CustomWindow")
 package com.interview.project.ui.utils
 
 import android.content.Context
