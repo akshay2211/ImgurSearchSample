@@ -24,12 +24,12 @@
 
     <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="android:editTextColor">#f00</item>
-        <item name="android:textColor">#f00</item>
         <item name="android:textColorHint">@color/grey</item>
         <item name="editTextBackground">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:queryBackground" tools:targetApi="lollipop">@android:color/transparent
         </item>
+        <item name="fontFamily">@font/quicksand_regular</item>
         <item name="iconTint">@color/darkGrey</item>
         <item name="android:background">@drawable/search_background</item>
     </style>

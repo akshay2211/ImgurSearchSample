@@ -3,6 +3,7 @@ package com.interview.project.ui.singlepost;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -34,6 +36,8 @@ import org.jetbrains.annotations.Nullable;
 import kotlin.Lazy;
 import kotlin.coroutines.CoroutineContext;
 
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade;
 import static org.koin.java.KoinJavaComponent.inject;
 
@@ -44,6 +48,7 @@ public class SingleActivity extends AppCompatActivity {
     CommentsAdapter commentsAdapter = new CommentsAdapter();
 
     Images images = null;
+    ImageView imageView = null;
 
     public static void startActivity(@Nullable Activity context, @NotNull Images images) {
         Intent i = new Intent(context, SingleActivity.class);
@@ -76,7 +81,7 @@ public class SingleActivity extends AppCompatActivity {
         Intent intent = getIntent();
         images = (Images) intent.getSerializableExtra(IMAGES_TAG);
         MaterialToolbar toolbar = findViewById(R.id.toolbar);
-        ImageView imageView = findViewById(R.id.singleImageView);
+        imageView = findViewById(R.id.singleImageView);
         AppCompatEditText appCompatEditText = findViewById(R.id.appCompatEditText);
         AppCompatImageView appCompatImageView = findViewById(R.id.appCompatImageView);
         RecyclerView commentsRecyclerView = findViewById(R.id.commentsRecyclerView);
@@ -93,9 +98,11 @@ public class SingleActivity extends AppCompatActivity {
         glideRequests.load(images.getLink())
                 .placeholder(new ColorDrawable(Color.CYAN))
                 .error(new ColorDrawable(Color.GRAY))
+                // .thumbnail(glideRequests.load(images.getLink()))
                 .transition(withCrossFade())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
+
         appCompatImageView.setOnClickListener(v -> {
             String comment_text = appCompatEditText.getText().toString();
             if (!comment_text.trim().isEmpty()) {
@@ -104,8 +111,38 @@ public class SingleActivity extends AppCompatActivity {
                     db.getValue().commentsDao().insert(c);
                 })).start();
                 appCompatEditText.setText("");
+                CustomWindow.hideKeyboard(appCompatEditText, getBaseContext());
             }
         });
     }
 
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int width = 0;
+        switch (newConfig.orientation) {
+            case ORIENTATION_PORTRAIT: {
+                width = Constants.INSTANCE.getWidthPX();
+                Log.e("orientation", "-> " + newConfig.orientation + "    " + ORIENTATION_PORTRAIT);
+            }
+            break;
+            case ORIENTATION_LANDSCAPE: {
+                width = Constants.INSTANCE.getHeightPX();
+                Log.e("orientation", "-> " + newConfig.orientation + "    " + ORIENTATION_LANDSCAPE);
+            }
+            break;
+
+        }
+        if (imageView == null) {
+            return;
+        }
+        int finalWidth = width;
+        imageView.post(() -> {
+            ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+            lp.width = finalWidth;
+            lp.height = (images.getHeight() * lp.width) / images.getWidth();
+            imageView.setLayoutParams(lp);
+            imageView.requestLayout();
+        });
+    }
 }

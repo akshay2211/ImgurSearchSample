@@ -1,4 +1,5 @@
 @file:JvmName("CustomWindow")
+
 package com.interview.project.ui.utils
 
 import android.content.Context
@@ -10,6 +11,12 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.Window
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.recyclerview.widget.GridLayoutManager
+import com.interview.project.R
+import com.interview.project.ui.adapters.ImagesListAdapter
+
 
 /**
  * Created by akshay on 24,October,2020
@@ -51,3 +58,38 @@ fun String?.debounce(callback: (String) -> Unit) {
 
 var debounceRunnable: Runnable? = null
 var debounceHandler: Handler = Handler(Looper.getMainLooper())
+
+
+fun AppCompatEditText.hideKeyboard(context: Context) {
+    val manager: InputMethodManager? =
+        context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+    manager?.hideSoftInputFromWindow(
+        this.windowToken, 0
+    )
+}
+
+fun Context.getGridLayoutManager(
+    orientationPortrait: Int,
+    adapter: ImagesListAdapter
+): GridLayoutManager {
+
+    var spancount = when (orientationPortrait) {
+        Configuration.ORIENTATION_PORTRAIT -> 3
+        Configuration.ORIENTATION_LANDSCAPE -> 4
+        else -> 3
+    }
+    return GridLayoutManager(
+        this, spancount,
+        GridLayoutManager.VERTICAL, false
+    ).apply {
+        spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (adapter.getItemViewType(position)) {
+                    R.layout.images_row -> 1
+                    R.layout.network_state_item -> spancount
+                    else -> 1
+                }
+            }
+        }
+    }
+}
