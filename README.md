@@ -41,16 +41,16 @@ When text is typed in search view data is fetched from database. If data is not 
 ## Libraries Used
 
  `Android Architecture Components`
- ##### LiveData
- ##### ViewModel
- ##### Paging
- ##### Preference
+* LiveData
+* ViewModel
+* Paging
+* Preference
  `Dependency Injection`
- ##### Koin 
+* Koin
  `asynchronous programming`
- ##### Kotlin Coroutines
+* Kotlin Coroutines
 `Image Loading`
- ##### Glide
+* Glide
  
 
 
