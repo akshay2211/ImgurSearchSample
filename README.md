@@ -1,6 +1,7 @@
 # Imgur Search Sample
 Android Application sample based on Mvvm, Koin, LiveData, Paging, Room, AndroidX Preference &amp; Coroutines
-it contains
+
+## It contains
 1. **Home Page**
   * Search bar to search images via Imgur Api
   * List of the images retrieved by local db
