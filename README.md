@@ -45,10 +45,13 @@ When text is typed in search view data is fetched from database. If data is not 
 * ViewModel
 * Paging
 * Preference
+
  `Dependency Injection`
 * Koin
+
  `asynchronous programming`
 * Kotlin Coroutines
+
 `Image Loading`
 * Glide
  
