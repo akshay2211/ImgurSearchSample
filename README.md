@@ -1,5 +1,5 @@
 # Imgur Search Sample
-Android Application sample based on Mvvm, Koin, LiveData, Paging, Room, AndroidX Preference &amp; Coroutines
+Android Application sample based on Mvvm, Koin, LiveData, Paging, Room, AndroidX Preference &amp; Coroutines. It requires an [Imgur.com](https://imgur.com/) API Client ID which has to be added in [Constants.kt](app/src/main/java/com/interview/project/ui/utils/Constants.kt)
 
 ## It contains
 1. **Home Page**
