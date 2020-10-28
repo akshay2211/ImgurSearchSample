@@ -49,7 +49,7 @@ When text is typed in search view data is fetched from database. If data is not 
  `Dependency Injection`
 * Koin
 
- `asynchronous programming`
+ `Asynchronous Programming`
 * Kotlin Coroutines
 
 `Image Loading`

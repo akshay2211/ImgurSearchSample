@@ -19,7 +19,6 @@ import com.interview.project.ui.utils.NetworkState
 import com.interview.project.ui.utils.State
 import kotlinx.android.synthetic.main.images_row.view.*
 import kotlinx.android.synthetic.main.network_state_item.view.*
-import java.util.*
 
 /**
  * Created by akshay on 24,October,2020
@@ -43,17 +42,6 @@ class ImagesListAdapter(
             R.layout.network_state_item -> (holder as NetworkStateItemViewHolder).bindTo(
                 networkState
             )
-        }
-    }
-
-    override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
-        position: Int,
-        payloads: MutableList<Any>
-    ) {
-        if (payloads.isNotEmpty()) {
-        } else {
-            onBindViewHolder(holder, position)
         }
     }
 
@@ -96,7 +84,6 @@ class ImagesListAdapter(
     }
 
     companion object {
-        private val PAYLOAD_SCORE = Any()
         val POST_COMPARATOR = object : DiffUtil.ItemCallback<Images>() {
             override fun areContentsTheSame(oldItem: Images, newItem: Images): Boolean =
                 oldItem == newItem
@@ -105,7 +92,6 @@ class ImagesListAdapter(
                 oldItem.id == newItem.id
 
         }
-
     }
 }
 
@@ -136,11 +122,11 @@ class ImagesViewHolder(
             .placeholder(ColorDrawable(Color.GRAY))
             .error(ColorDrawable(Color.GRAY))
             .thumbnail(
-                glideRequests.load(images?.link).override(50)
+                glideRequests.load(images?.link).override(300)
                     .transform(CenterCrop())
             )
             .transform(CenterCrop())
-            .signature(ObjectKey(UUID.randomUUID().toString()))
+            .signature(ObjectKey(images?.id ?: ""))
             .transition(withCrossFade())
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(itemView.imageView)

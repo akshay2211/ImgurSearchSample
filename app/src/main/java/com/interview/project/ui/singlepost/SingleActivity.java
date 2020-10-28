@@ -18,7 +18,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.interview.project.R;
 import com.interview.project.data.local.AppDatabase;
@@ -95,11 +95,12 @@ public class SingleActivity extends AppCompatActivity {
         });
 
         glideRequests.load(images.getLink())
-                .placeholder(new ColorDrawable(Color.CYAN))
+                .placeholder(new ColorDrawable(Color.GRAY))
                 .error(new ColorDrawable(Color.GRAY))
-                // .thumbnail(glideRequests.load(images.getLink()))
+                .thumbnail(0.5f)
                 .transition(withCrossFade())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .signature(new ObjectKey("" + images.getId()))
+                .skipMemoryCache(true)
                 .into(imageView);
 
         appCompatImageView.setOnClickListener(v -> {
