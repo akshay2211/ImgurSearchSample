@@ -14,10 +14,10 @@ Android Application sample based on Mvvm, Koin, LiveData, Paging, Room, AndroidX
   * Cache Cleaner
 
 <div>
-  <img float=left width=24.5% src="media/home-dark.png">
-  <img float=left width=24.5% src="media/home-light.png">
-  <img float=left width=24.5% src="media/inner-page.png">
-  <img float=left width=24.5% src="media/theme.png">
+  <img float=left width=24% src="media/home-dark.png">
+  <img float=left width=24% src="media/home-light.png">
+  <img float=left width=24% src="media/inner-page.png">
+  <img float=left width=24% src="media/theme.png">
 </div>
 
 Dark theme | Light Theme | Inner page | Preference
