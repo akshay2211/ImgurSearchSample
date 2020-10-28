@@ -11,6 +11,7 @@ import com.interview.project.model.Images
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import java.net.UnknownHostException
 import java.util.concurrent.Executor
 import kotlin.coroutines.CoroutineContext
 
@@ -45,14 +46,17 @@ class CustomBoundaryCallback(
                 try {
                     response = apiList.getSearchList("1", searchedContent)
                     if (response?.isSuccessful != true) {
-                        var error = response?.errorBody()
+                        val error = response?.errorBody()
                         it.recordFailure(IllegalStateException(error?.extractMessage()))
                         return@launch
                     }
                     insertItemsIntoDb(response!!, it)
-                } catch (e: Exception) {
+                } catch (e: UnknownHostException) {
                     e.printStackTrace()
                     it.recordFailure(IllegalStateException(context.resources.getString(R.string.internet_error)))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    it.recordFailure(IllegalStateException(e))
                 }
             }
         }
@@ -71,14 +75,17 @@ class CustomBoundaryCallback(
                             searchedContent
                         )
                     if (response?.body() == null) {
-                        var error = response?.errorBody()
+                        val error = response?.errorBody()
                         it.recordFailure(IllegalStateException(error?.extractMessage()))
                         return@launch
                     }
                     insertItemsIntoDb(response!!, it)
-                } catch (e: Exception) {
+                } catch (e: UnknownHostException) {
                     e.printStackTrace()
                     it.recordFailure(IllegalStateException(context.resources.getString(R.string.internet_error)))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    it.recordFailure(IllegalStateException(e))
                 }
             }
 
