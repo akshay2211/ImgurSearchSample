@@ -16,5 +16,12 @@
         app:key="dialog_clear_cache"
         app:summary="@string/cache_summary"
         app:title="@string/cache_title" />
+    <MultiSelectListPreference
+        app:entries="@array/entries"
+        app:entryValues="@array/entry_values"
+        app:key="multiselect"
+        app:summary="Report technical issues or suggest new features"
+        app:title="Select Sections" />
+
 
 </PreferenceScreen>
