@@ -10,7 +10,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.interview.project"
+        applicationId "io.ak1.imgur"
         minSdkVersion 19
         targetSdkVersion 30
         versionCode 1

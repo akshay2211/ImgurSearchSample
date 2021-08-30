@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/horizontal_margin"
-    tools:context=".MainActivity">
+    tools:context="io.ak1.imgur.MainActivity">
 
     <TextView
         android:id="@+id/search_page_heading"
