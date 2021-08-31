@@ -7,7 +7,7 @@ import androidx.paging.PagedList
  * Created by akshay on 25,October,2020
  * akshay2211@github.io
  */
-data class LiveDataCollection<T>(
+data class LiveDataCollection<T : Any>(
     // the LiveData of paged lists for the UI to observe
     val pagedList: LiveData<PagedList<T>>,
     // represents the network request status to show to the user
