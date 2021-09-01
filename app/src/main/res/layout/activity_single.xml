@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:background="@color/background"
     android:orientation="vertical"
-    tools:context=".ui.singlepost.SingleActivity">
+    tools:context="io.ak1.imgur.ui.singlepost.SingleActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
